@@ -1,0 +1,37 @@
+# Maintainer: William C. Canin
+pkgname=skeleton
+pkgver=0.1.0
+pkgrel=1
+pkgdesc="Rust project template for ARGVUS Arch Linux packages"
+arch=('x86_64')
+url="https://github.com/argvus/skeleton-rs-pkg"
+license=('GPL-3.0-only')
+depends=('gcc-libs' 'glibc')
+makedepends=('cargo')
+options=('!debug')
+source=("${pkgname}-${pkgver}.tar.gz")
+sha256sums=()
+
+_source_dir() {
+  find "${srcdir}" -mindepth 1 -maxdepth 1 -type d -print -quit
+}
+
+build() {
+  cd "$(_source_dir)"
+  cargo build --workspace --release --locked
+}
+
+check() {
+  cd "$(_source_dir)"
+  cargo test --workspace --release --locked
+  test "$(target/release/${pkgname})" = "Hello, ARGVUS Rust Skeleton!"
+}
+
+package() {
+  cd "$(_source_dir)"
+
+  install -Dm755 "target/release/${pkgname}" "${pkgdir}/usr/bin/${pkgname}"
+  install -Dm644 README.md "${pkgdir}/usr/share/doc/${pkgname}/README.md"
+
+  install -Dm644 "LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}

@@ -1,0 +1,23 @@
+[workspace]
+resolver = "2"
+members = [
+  "crates/core",
+  "crates/main",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+license = "GPL-3.0-only"
+rust-version = "1.95"
+authors = ["ARGVUS"]
+repository = "https://github.com/argvus/skeleton-rs-pkg"
+homepage = "https://github.com/argvus/skeleton-rs-pkg"
+description = "A Rust and Arch Linux package skeleton for ARGVUS projects"
+
+[workspace.dependencies]
+skeleton-core = { version = "0.1.0", path = "crates/core" }
+
+[profile.release]
+lto = true
+strip = true

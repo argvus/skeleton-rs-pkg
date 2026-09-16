@@ -1,0 +1,18 @@
+[package]
+name = "skeleton"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+description.workspace = true
+repository.workspace = true
+homepage.workspace = true
+readme = "../../README.md"
+
+[[bin]]
+name = "skeleton"
+path = "src/main.rs"
+
+[dependencies]
+skeleton-core.workspace = true
