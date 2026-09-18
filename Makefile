@@ -1,5 +1,5 @@
 .PHONY: help build package pkg rust-build release install install-package clean \
-	validate lint fmt fmt-check clippy test tests check audit deny machete changelog
+	validate lint-shell fmt fmt-check clippy test tests check audit deny machete changelog
 
 .DEFAULT_GOAL := help
 
@@ -15,9 +15,19 @@ help:
 	@echo "  make check           - run formatting, lint and Rust tests"
 	@echo "  make changelog       - regenerate CHANGELOG.md with git-cliff"
 
-lint:
-	@shellcheck tools/sh/pkgbuild_local.sh
-	@echo "Lint Shell Script OK"
+lint-shell:
+	@for root in tools packaging/arch/common src; do \
+		if [ -d "$$root" ]; then \
+			find "$$root" -type f -name '*.sh' -exec shellcheck -e SC1090 -e SC2034 -e SC2154 {} +; \
+		fi; \
+	done
+	@for root in tools packaging/arch/common src; do \
+		if [ -d "$$root" ]; then \
+			find "$$root" -type f -name '*.sh' -exec bash -n {} +; \
+		fi; \
+	done
+	@git diff --check
+	@echo "Lint Shell OK"
 
 fmt:
 	@cargo fmt --all
@@ -42,7 +52,7 @@ deny:
 machete:
 	@cargo machete
 
-check: lint fmt-check clippy test
+check: lint-shell fmt-check clippy test
 
 rust-build:
 	@cargo build --workspace --locked
