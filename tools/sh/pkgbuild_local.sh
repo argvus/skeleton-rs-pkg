@@ -7,13 +7,14 @@ ROOT_DIR="$(cd -- "$SCRIPT_DIR/../.." && pwd)"
 BUILD_DIR="$ROOT_DIR/build"
 ARTIFACTS_DIR="$BUILD_DIR/artifacts"
 DIST_DIR="$BUILD_DIR/dist"
+CARGO_TARGET_CACHE="$BUILD_DIR/cargo-target"
 
 PKGBUILD_DIR="$ROOT_DIR/packaging/arch/local"
 PKGBUILD="$PKGBUILD_DIR/PKGBUILD"
 
 read -r pkgname pkgver <<<"$(bash -c 'source "$1"; printf "%s %s" "$pkgname" "$pkgver"' bash "$PKGBUILD")"
 
-mkdir -p "$ARTIFACTS_DIR" "$DIST_DIR"
+mkdir -p "$ARTIFACTS_DIR" "$DIST_DIR" "$CARGO_TARGET_CACHE"
 find "$DIST_DIR" -maxdepth 1 -type f -name "${pkgname}-*.pkg.tar.*" -delete
 
 archive="$ARTIFACTS_DIR/${pkgname}-${pkgver}.tar.gz"
@@ -49,7 +50,10 @@ export BUILDDIR="$ARTIFACTS_DIR"
 export SRCDEST="$ARTIFACTS_DIR"
 export PKGDEST="$DIST_DIR"
 
-cp "$PKGBUILD" "$PKGBUILD_DIR/PKGBUILD.local"
+{
+  printf 'export CARGO_TARGET_DIR=%q\n' "$CARGO_TARGET_CACHE"
+  cat "$PKGBUILD"
+} > "$PKGBUILD_DIR/PKGBUILD.local"
 trap 'rm -f "$PKGBUILD_DIR/PKGBUILD.local"' EXIT
 
 sha256="$(sha256sum "$archive" | awk '{print $1}')"

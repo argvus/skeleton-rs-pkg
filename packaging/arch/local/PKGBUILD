@@ -16,21 +16,33 @@ _source_dir() {
   find "${srcdir}" -mindepth 1 -maxdepth 1 -type d -print -quit
 }
 
+_cargo_target_dir() {
+  printf '%s\n' "${CARGO_TARGET_DIR:-"${srcdir}/target"}"
+}
+
 build() {
   cd "$(_source_dir)"
+  local cargo_target_dir
+  cargo_target_dir="$(_cargo_target_dir)"
+  export CARGO_TARGET_DIR="$cargo_target_dir"
   cargo build --workspace --release --locked
 }
 
 check() {
   cd "$(_source_dir)"
+  local cargo_target_dir
+  cargo_target_dir="$(_cargo_target_dir)"
+  export CARGO_TARGET_DIR="$cargo_target_dir"
   cargo test --workspace --release --locked
-  test "$(target/release/${pkgname})" = "Hello, ARGVUS Rust Skeleton!"
+  test "$("${cargo_target_dir}/release/${pkgname}")" = "Hello, ARGVUS Rust Skeleton!"
 }
 
 package() {
   cd "$(_source_dir)"
+  local cargo_target_dir
+  cargo_target_dir="$(_cargo_target_dir)"
 
-  install -Dm755 "target/release/${pkgname}" "${pkgdir}/usr/bin/${pkgname}"
+  install -Dm755 "${cargo_target_dir}/release/${pkgname}" "${pkgdir}/usr/bin/${pkgname}"
   install -Dm644 README.md "${pkgdir}/usr/share/doc/${pkgname}/README.md"
 
   install -Dm644 "LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
