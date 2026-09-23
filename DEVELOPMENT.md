@@ -50,7 +50,9 @@ What happens:
 2. The archive checksum is injected into a temporary `PKGBUILD.local`, which
    is removed automatically when the build finishes.
 3. `makepkg` runs `cargo build --release --locked`, the workspace tests, and
-   the package installation steps with `PKGDEST` set to `build/dist`.
+   the package installation steps with `PKGDEST` set to `build/dist`. Local
+   packaging reuses Cargo artifacts in `build/cargo-target/`; `make clean`
+   removes that cache.
 
 Result:
 

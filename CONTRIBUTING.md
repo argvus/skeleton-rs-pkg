@@ -9,9 +9,7 @@ release workflow.
 
 ## Code of Conduct
 
-By participating, you agree to abide by the
-[Contributor Covenant v2.1](https://www.contributor-covenant.org/version/2/1/code_of_conduct/).
-Instances of unacceptable behavior may be reported to the project maintainers.
+By participating, please also read [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
 
 ## What to contribute
 
@@ -83,6 +81,19 @@ so the approach can be agreed on before work starts.
   settings may apply).
 - Squash-merge keeps history clean.
 
+## AI-generated contributions
+
+AI-generated code is only accepted for trivial changes totaling fewer than `15 lines` of generated code in the contribution.
+
+For larger changes, contributions must be submitted by a human who understands the
+changes, can explain the implementation, and is prepared to answer questions about
+the code.
+
+The decision to include a contribution in the project must also be made by a human.
+
+An LLM or other automated agent must not commit code directly to the project
+repository.
+
 ### Checksums
 
 The PKGBUILDs must **never** contain `sha256sums=('SKIP')`. Keep `sha256sums=()`
@@ -126,4 +137,4 @@ tagging.
 ## License
 
 Contributions are accepted under the terms of the
-[GPL-3.0 License](LICENSE) that covers this project.
+[License](LICENSE) that covers this project.
